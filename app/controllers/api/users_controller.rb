@@ -1,16 +1,19 @@
 class Api::UsersController < ApplicationController
+  before_action :authenticate_user, except: [:create]
+
   def create
-    @users = User.create(
+    @user = User.create(
         name: params[:name],
         email: params[:email],
-        password_digest: params[:password_digest],
+        password: params[:password],
+        password_confirmation: params[:password_confirmation],
         birthday: params[:birthday]
       )
 
-    if user.save
+    if @user.save
       render json: {message: 'User created successfully'}, status: :created
     else
-      render json: {errors: user.errors.full_messages}, status: :bad_request
+      render json: {errors: @user.errors.full_messages}, status: :bad_request
     end
   end
 
@@ -26,7 +29,7 @@ class Api::UsersController < ApplicationController
 
     @user.name = params[:name] || @user.name
     @user.email = params[:email] || @user.email
-    @user.password_digest = params[:password_digest] || @user.password_digest
+    @user.password = params[:password] || @user.password_digest
     @user.birthday = params[:birthday] || @user.birthday
 
     if @user.save
@@ -34,5 +37,11 @@ class Api::UsersController < ApplicationController
     else
       render json: {errors: @user.errors.full_messages}, status: :unprocessable_entity # sad path
     end
+  end
+
+  def destroy
+    @user = User.find(params[:id])
+    @user.destroy
+    render json:{message: "User deleted"}
   end
 end
