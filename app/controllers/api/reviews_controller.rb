@@ -1,5 +1,5 @@
 class Api::ReviewsController < ApplicationController
-  before_action :authenticate_user
+  # before_action :authenticate_user
 
   def create
     @review = Review.create(
@@ -15,6 +15,11 @@ class Api::ReviewsController < ApplicationController
     else
       render json: {errors: @review.errors.full_messages}, status: :unprocessable_entity # sad path
     end
+  end
+
+  def show    # QUESTION - SHOULD I KEEP PARAMS ID?
+    @review = Review.find(params[:id])
+    render 'show.json.jbuilder'
   end
 
   def update
