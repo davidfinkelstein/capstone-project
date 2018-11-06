@@ -1,5 +1,5 @@
 class Api::UsersController < ApplicationController
-  before_action :authenticate_user, except: [:create]
+  # before_action :authenticate_user, except: [:create]
 
   def create
     @user = User.create(
@@ -18,8 +18,13 @@ class Api::UsersController < ApplicationController
   end
 
   def show
-    @user = User.find_by(id: params[:id])
-    render 'show.json.jbuilder'
+    if current_user
+      @user = User.find(current_user.id)
+    else
+      @user = User.find(params[:id])
+    end
+      render 'show.json.jbuilder'
+
   end
 
   def update
