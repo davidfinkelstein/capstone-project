@@ -45,7 +45,7 @@ class Api::ItemsController < ApplicationController
     @item.description = params[:description] || @item.description
     @item.website_url = params[:website_url] || @item.website_url
     @item.amazon_url = params[:amazon_url] || @item.amazon_url
-    @item.img_url = params[:image_url] || @item.img_url
+    @item.img_url = params[:img_url] || @item.img_url
   
     if @item.save
       render 'show.json.jbuilder' #happy path
